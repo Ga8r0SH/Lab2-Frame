@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Creating a task{% endblock %}
+{% block body %}
+    <h1>Creating a task</h1><div class="example-wrapper">
+    <form class="task-form">
+        {{ form(task_form) }}
+        <button type="submit">Submit</button>
+    </form>
+</div>   
+
+{% endblock %}

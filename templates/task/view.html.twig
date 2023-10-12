@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Подробная информация о задаче{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+</style>
+{% endblock %}
+
+{% block body %}
+    <div class="task-details">
+        <h1>{{ task.title }}</h1>
+        <p><strong>Описание:</strong> {{ task.description }}</p>
+        <p><strong>Срок выполнения:</strong> {{ task.date ? task.date|date('Y-m-d') : 'Нет срока' }}</p>
+        <p><strong>Категория:</strong> {{ task.category.name }}</p>
+        <div class="edit-button">
+            <a href="{{ path('task_update', {'id': task.id}) }}" class="btn btn-primary">Редактировать</a>
+        </div>
+    </div>
+    <style>
+        /* Стили для страницы "Подробная информация о задаче" */
+        body {
+            background-color: #f0f0f0; /* Нейтральный фон для всей страницы */
+            font-family: Arial, sans-serif; /* Шрифт по умолчанию */
+        }
+
+        .task-details {
+            background-color: #fff; /* Нейтральный фон для задачи */
+            border: 1px solid #ccc;
+            border-radius: 10px; /* Округленные углы */
+            padding: 20px;
+            box-shadow: 2px 2px 5px #888; /* Тень */
+        }
+
+        .task-details h1 {
+            font-size: 24px; /* Увеличение размера шрифта для заголовка */
+            text-decoration: underline; /* Подчеркивание заголовка */
+        }
+
+        .task-details p {
+            margin: 10px 0;
+        }
+
+        .edit-button {
+            text-align: right; /* Выравнивание кнопки вправо */
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
