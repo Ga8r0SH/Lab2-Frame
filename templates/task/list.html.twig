@@ -20,7 +20,7 @@
    <div class="create-button-container">
        <a class="create-button" href="{{ path('task_create') }}">Создать задачу</a>
    </div>
-
+{{ knp_pagination_render(tasks) }}
     <style>
 /* public/css/task-list.css */
 body {

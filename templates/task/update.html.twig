@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Редактирование задачи{% endblock %}
+{% block title %}Добавление задачи{% endblock %}
 
 {% block styles %}
     {{ parent() }}
@@ -9,7 +9,7 @@
 
 {% block body %}
 <div class="form-container">
-    <h1>Редактирование задачи</h1>
+    <h1>Добавление задачи</h1>
     {{ form_start(task_form) }}
     {{ form_widget(task_form) }}
     {{ form_end(task_form) }}

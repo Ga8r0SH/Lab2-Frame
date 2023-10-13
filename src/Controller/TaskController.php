@@ -5,10 +5,11 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Task;
 use App\Form\TaskType;
-use App\Repository\CategoryRepository;
+
 use App\Repository\TaskRepository;
-use DateTime;
+
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ class TaskController extends AbstractController
            return $this->redirectToRoute('app_taskcreate');
         }
 
-        return $this->render('task/index.html.twig', [
+        return $this->render('task/update.html.twig', [
             'task_form' => $form,
         ]);
 
@@ -59,12 +60,22 @@ class TaskController extends AbstractController
 }
 
 #[Route('/list', name: 'list')]
-public function list(TaskRepository $taskRepository): Response
+    public function list(TaskRepository $taskRepository, PaginatorInterface $paginator, Request $request): Response
 {
-    $tasks = $taskRepository->findAll();
+    $query = $taskRepository->createQueryBuilder('t')
+        ->getQuery();
+
+    $page = $request->query->getInt('page', 1); // Номер текущей страницы
+    $itemsPerPage = 3; // Количество задач на странице
+
+    $pagination = $paginator->paginate(
+        $query,
+        $page,
+        $itemsPerPage
+    );
 
     return $this->render('task/list.html.twig', [
-        'tasks' => $tasks,
+        'tasks' => $pagination,
     ]);
 }
 
