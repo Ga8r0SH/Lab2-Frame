@@ -12,7 +12,7 @@
                <p><strong>Срок:</strong> {{ task.Date|date('Y-m-d') }}</p>
                <p><strong>Категория:</strong> {{ task.category.name }}</p>
                <a class="view-button" href="{{ path('app_task_view', {'id': task.id}) }}">Просмотреть</a>
-               <button class="delete-button" data-task-id="{{ task.id }}">Удалить</button>
+              <a href="{{ path('task_delete', {'id': task.id}) }}" class="delete-button" data-task-id="{{ task.id }}">Удалить</a>
            </div>
        {% endfor %}
    </div>
@@ -20,9 +20,11 @@
    <div class="create-button-container">
        <a class="create-button" href="{{ path('task_create') }}">Создать задачу</a>
    </div>
-{{ knp_pagination_render(tasks) }}
+
     <style>
 /* public/css/task-list.css */
+
+
 body {
     background-color: #f0f0f0; /* Нейтральный фон для всей страницы */
     font-family: Arial, sans-serif; /* Шрифт по умолчанию */
@@ -77,9 +79,11 @@ body {
            const confirmation = confirm("Вы уверены, что хотите удалить эту задачу?");
            if (confirmation) {
                // Перенаправление на страницу удаления
-               window.location.href = `/task/delete/${taskId}`;
+               window.location.href = `/task/list`;
            }
        });
    });
    </script>
 {% endblock %}
+
+

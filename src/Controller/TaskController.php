@@ -1,25 +1,26 @@
 <?php
 
 namespace App\Controller;
-
-use App\Entity\Category;
 use App\Entity\Task;
 use App\Form\TaskType;
-
-use App\Repository\TaskRepository;
-
-use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Service\TaskService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[Route('/task', name: 'app_task')]
 class TaskController extends AbstractController
 {
+    private $taskService;
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
     #[Route('/create', name: 'create')]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request): Response
     {
         $task = new Task;
         $form = $this->createForm(TaskType::class, $task);
@@ -28,10 +29,8 @@ class TaskController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
+            $this->taskService->createTask($task);
             $task = $form->getData();
-            $entityManager->persist($task);
-            $entityManager->persist($task);
-            $entityManager->flush();
            return $this->redirectToRoute('app_taskcreate');
         }
 
@@ -40,49 +39,39 @@ class TaskController extends AbstractController
         ]);
 
     }
-    #[Route('/delete/{id}', name:'task_delete')]
 
-    public function delete(Request $request, EntityManagerInterface $entityManager, $id): Response
+    #[Route('/list', name: 'list')]
+    public function list(Request $request): Response
+    {
+        $tasks = $this->taskService->getAllTasks();
+    
+        return $this->render('task/list.html.twig', [
+            'tasks' => $tasks,
+        ]);
+    }
+
+    #[Route('/delete/{id}', name: 'task_delete')]
+public function delete( int $id, Request $request): Response
 {
-    // Получаем задачу по ID
-    $task = $entityManager->getRepository(Task::class)->find($id);
-
+    $task = $this->taskService->getTaskById($id);
     if (!$task) {
         throw $this->createNotFoundException('Задача не найдена');
     }
 
-    // Удаляем задачу
-    $entityManager->remove($task);
-    $entityManager->flush();
+    $this->taskService->deleteTask($task);
 
-    // После удаления задачи, перенаправляем на страницу списка задач или другую подходящую страницу
-    return $this->redirectToRoute('task_delete');
+    // После удаления задачи, перенаправьтесь на страницу списка задач или другую подходящую страницу
+    return $this->redirectToRoute('app_tasklist');
 }
 
-#[Route('/list', name: 'list')]
-    public function list(TaskRepository $taskRepository, PaginatorInterface $paginator, Request $request): Response
-{
-    $query = $taskRepository->createQueryBuilder('t')
-        ->getQuery();
 
-    $page = $request->query->getInt('page', 1); // Номер текущей страницы
-    $itemsPerPage = 3; // Количество задач на странице
 
-    $pagination = $paginator->paginate(
-        $query,
-        $page,
-        $itemsPerPage
-    );
-
-    return $this->render('task/list.html.twig', [
-        'tasks' => $pagination,
-    ]);
-}
 
 #[Route('/view/{id}', name: 'view')]
-    public function view(int $id, TaskRepository $taskRepository): Response
+    public function view(int $id): Response
     {
-        $task = $taskRepository->find($id);
+        $task = $this->taskService->getTaskById($id);
+       
 
         if (!$task) {
             throw $this->createNotFoundException('Task not found');
@@ -94,10 +83,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/update/{id}', name: 'update')]
-    public function update(int $id, Request $request, TaskRepository $taskRepository, EntityManagerInterface $entityManager): Response
+    public function update(int $id, Request $request): Response
     {
-        $task = $taskRepository->find($id);
-
+        $task = $this->taskService->getTaskById($id);
         if (!$task) {
             throw $this->createNotFoundException('Task not found');
         }
@@ -106,7 +94,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->taskService->updateTask($task);
 
             return $this->redirectToRoute('app_task_view', ['id' => $task->getId()]);
         }

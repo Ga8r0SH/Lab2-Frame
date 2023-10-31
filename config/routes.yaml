@@ -14,7 +14,7 @@ app_task_view:
 task_delete:
     path: /task/list
     controller: App\Controller\TaskController::delete
-    methods: ['GET']
+    methods: ['POST']
 
 task_update:
     path: '/task/update/{id}'
@@ -23,3 +23,7 @@ task_update:
 task_create:
     path: '/task/create'
     controller: App\Controller\TaskController::create
+    
+    # list:
+    # path: '/task/list'
+    # controller: App\Controller\TaskController::list
