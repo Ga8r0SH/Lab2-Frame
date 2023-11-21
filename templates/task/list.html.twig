@@ -12,7 +12,6 @@
                <p><strong>Срок:</strong> {{ task.Date|date('Y-m-d') }}</p>
                <p><strong>Категория:</strong> {{ task.category.name }}</p>
                <a class="view-button" href="{{ path('app_task_view', {'id': task.id}) }}">Просмотреть</a>
-              <a href="{{ path('task_delete', {'id': task.id}) }}" class="delete-button" data-task-id="{{ task.id }}">Удалить</a>
            </div>
        {% endfor %}
    </div>
@@ -21,69 +20,7 @@
        <a class="create-button" href="{{ path('task_create') }}">Создать задачу</a>
    </div>
 
-    <style>
-/* public/css/task-list.css */
 
-
-body {
-    background-color: #f0f0f0; /* Нейтральный фон для всей страницы */
-    font-family: Arial, sans-serif; /* Шрифт по умолчанию */
-}
-
-.task-container {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.task {
-    background-color: #fff; /* Нейтральный фон для задач */
-    border: 1px solid #ccc;
-    border-radius: 10px; /* Округленные углы */
-    padding: 10px;
-    margin: 10px;
-    width: calc(33.33% - 20px); /* Распределение задач по 3 в ряду */
-    box-sizing: border-box;
-    box-shadow: 2px 2px 5px #888; /* Тень */
-}
-
-.task h3 {
-    font-size: 18px; /* Увеличение размера шрифта для названия задачи */
-    text-decoration: underline; /* Подчеркивание текста */
-}
-
-
-/* public/css/task-list.css */
-.view-button {
-    float: right; /* Сделать кнопку плавающей справа */
-    margin-top: 10px; /* Добавить небольшой верхний отступ */
-}
-.create-button-container {
-            text-align: center;
-        }
-
-        .create-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-   </style>
-    <script>
-   // Обработка нажатия кнопки удаления
-   const deleteButtons = document.querySelectorAll(".delete-button");
-   deleteButtons.forEach((button) => {
-       button.addEventListener("click", () => {
-           const taskId = button.getAttribute("data-task-id");
-           const confirmation = confirm("Вы уверены, что хотите удалить эту задачу?");
-           if (confirmation) {
-               // Перенаправление на страницу удаления
-               window.location.href = `/task/list`;
-           }
-       });
-   });
-   </script>
 {% endblock %}
 
 
