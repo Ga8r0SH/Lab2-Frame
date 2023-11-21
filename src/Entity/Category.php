@@ -44,7 +44,7 @@ class Category
     }
 
     /**
-     * @return Collection<int, Task>
+     * @return Collection<int, 
      */
     public function getTasks(): Collection
     {
@@ -64,7 +64,6 @@ class Category
     public function removeTask(Task $task): static
     {
         if ($this->tasks->removeElement($task)) {
-            // set the owning side to null (unless already changed)
             if ($task->getCategory() === $this) {
                 $task->setCategory(null);
             }

@@ -60,7 +60,6 @@ public function delete( int $id, Request $request): Response
 
     $this->taskService->deleteTask($task);
 
-    // После удаления задачи, перенаправьтесь на страницу списка задач или другую подходящую страницу
     return $this->redirectToRoute('app_tasklist');
 }
 
